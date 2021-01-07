@@ -1,0 +1,71 @@
+**********Simple INPUT ruleset**********
+
+firewall:
+  input:
+    http and https from user segments:
+      src:
+        - 110.12.6.0/23
+        - 110.12.7.0/23
+      proto:
+        tcp:
+          - 80
+          - 443
+ 
+ 
+ **********Single INPUT rule for object defination**********
+ 
+ firewall:
+  input:
+    ssh from everywhere:
+      proto:
+        tcp: 22
+    zabbix from zabbix-soc proxy:
+      src: <zabbix.domain.address>
+      proto:
+        tcp: 10050
+  objects:
+    <zabbix.domain.address>:
+      addr: 110.12.1.87
+    ssh.abc.xyz.com:
+      addr: 110.12.1.88
+    ssh.ty.com:
+      addr: 110.12.1.90
+      
+**********Multiple networking interfaces - by default only first interface gets default allow.**********
+      
+      firewall:
+  interfaces:
+    eth0:
+      deny:
+      - 110.12.0.0/15
+      default: allow
+    tun0:
+      allow:
+      - 110.12.0.0/15
+      
+  **********Configuration for VPN (FORWARD and INPUT Firewall)**********
+  
+  firewall:
+  ip_forward: 1
+  input:
+    openvpn:
+      proto:
+        udp:
+        - 1194
+        - 1195
+        tcp:
+        - 1194
+  forward:
+    zabbix proxy:
+      proto:
+        tcp: 10051
+      src: 110.12.100.0/23
+      dest: 110.12.1.81
+    syslog to log1 and log2:
+      proto:
+        tcp: 10514
+      src: 110.12.100.0/23
+      dest:
+      - 110.12.2.15
+      - 110.12.2.16
+      
