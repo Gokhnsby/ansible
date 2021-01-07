@@ -1,0 +1,41 @@
+**********Configuration for a Sample VM**********
+
+networking:
+  eth0:
+    ether: 40:df:7e:ef:1a:34
+    address: 110.12.1.131/28
+    gateway: 110.12.1.129
+    virtual_host_iface: dmztest
+    
+ **********Part of networking for cluster group.**********
+    
+    networking:
+  bond0:
+    bond_slaves:
+    - data0
+    - data1
+
+  dmzMisp:
+    vlan-iface: bond0
+    vlan-id: 2222
+  dmzAbc:
+    vlan-iface: bond0
+    vlan-id: 2223
+
+
+  DmzMisp:
+    bridge_ports: dmzMisp
+  DmzAbc:
+    bridge_ports: dmzAbc
+    
+    
+**********Two Interfaced sensor configuration running as suricata**********
+
+networking:
+  eth0:
+    ether: 40:df:7e:ef:1a:a3
+    address: 72.100.244.110/25
+    gateway: 72.100.244.1
+  sensor0:
+    ether: 40:df:7e:ef:1a:71
+    up: /usr/local/bin/suricata-nic.sh sensor0 up
